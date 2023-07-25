@@ -1,1 +1,39 @@
-"use strict";(()=>{var r=(o=document)=>{var n;let e="Last Published:";for(let t of o.childNodes)if(t.nodeType===Node.COMMENT_NODE&&((n=t.textContent)!=null&&n.includes(e))){let l=t.textContent.trim().split(e)[1];if(l)return new Date(l)}};var s=o=>{let e=r();console.log(`Hello ${o}!`),console.log(`This site was last published on ${e==null?void 0:e.toLocaleDateString("en-US",{year:"numeric",month:"long",day:"2-digit"})}.`)};window.Webflow||(window.Webflow=[]);window.Webflow.push(()=>{s("hello ladoo")});})();
+"use strict";
+(() => {
+  // bin/live-reload.js
+  new EventSource(`${"http://localhost:3000"}/esbuild`).addEventListener("change", () => location.reload());
+
+  // node_modules/.pnpm/@finsweet+ts-utils@0.39.2/node_modules/@finsweet/ts-utils/dist/webflow/getPublishDate.js
+  var getPublishDate = (page = document) => {
+    const publishDatePrefix = "Last Published:";
+    for (const node of page.childNodes) {
+      if (node.nodeType === Node.COMMENT_NODE && node.textContent?.includes(publishDatePrefix)) {
+        const publishDateValue = node.textContent.trim().split(publishDatePrefix)[1];
+        if (publishDateValue)
+          return new Date(publishDateValue);
+      }
+    }
+  };
+
+  // src/utils/greet.ts
+  var greetUser = (name) => {
+    const publishDate = getPublishDate();
+    console.log(`Hello ${name}!`);
+    console.log(
+      `This site was last published on ${publishDate?.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "2-digit"
+      })}.`
+    );
+  };
+
+  // src/index.ts
+  window.Webflow ||= [];
+  window.Webflow.push(() => {
+    const name = "hello ladoo";
+    greetUser(name);
+    document.body.style.backgroundColor = "red";
+  });
+})();
+//# sourceMappingURL=index.js.map
